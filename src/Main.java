@@ -1,87 +1,61 @@
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 import models.Student;
 import models.School;
 import models.Teacher;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws FileNotFoundException {
+        File studentsFile = new File("C:\\Users\\Admin\\IdeaProjects\\Assignment1prog\\src\\students.txt");
+        File teachersFile = new File("C:\\Users\\Admin\\IdeaProjects\\Assignment1prog\\src\\teachers.txt");
+
+        Scanner studentssc = new Scanner(studentsFile);
+        Scanner teacherssc = new Scanner(teachersFile);
+
         School school = new School();
 
-        List<Teacher> teachers;
-        teachers = readTeachers("C:\\Users\\Admin\\IdeaProjects\\Assignment1prog\\src\\teachers.txt");
-        for (Teacher teacher : teachers) {
+        while (studentssc.hasNext()) {
+
+            String name = studentssc.next();
+            String surname = studentssc.next();
+            int age = studentssc.nextInt();
+            boolean gender = studentssc.next().equals("Male");
+
+            Student student = new Student(name, surname, age, gender);
+
+            while (studentssc.hasNextInt()) {
+                int grade = studentssc.nextInt();
+                student.addGrade(grade);
+            }
+
+            System.out.println(student + " " + "and my GPA is: " + student.calculateGPA());
+
+            school.addMember(student);
+
+        }
+        while (teacherssc.hasNextLine()) {
+            String name = teacherssc.next();
+            String surname = teacherssc.next();
+            int age = teacherssc.nextInt();
+            boolean gender = teacherssc.next().equals("Male");
+            String subject = teacherssc.next();
+            int experience = teacherssc.nextInt();
+            int salary = teacherssc.nextInt();
+
+            Teacher teacher = new Teacher(name, surname, age, gender, subject, experience, salary);
+
+            if(experience > 10){
+                System.out.println(name + " " + "get a raise on 10% and now his salary: " + teacher.giveRaise(10));
+            }
+
             school.addMember(teacher);
+
         }
 
-        List<Student> students;
-        students = readStudents("C:\\Users\\Admin\\IdeaProjects\\Assignment1prog\\src\\students.txt");
-        for (Student student : students) {
-            school.addMember(student);
-        }
+        school.sort();
 
         System.out.println(school);
-
-        for (Student student : students) {
-            System.out.println("Student: " + student.getName() + " " + student.getSurname());
-            System.out.println("GPA: " + student.calculateGPA());
-            System.out.println();
-        }
-
-        for (Teacher teacher : teachers) {
-            if (teacher.getYearsOfExperience() > 10) {
-                teacher.giveRaise(10);
-                System.out.println("Teacher: " + teacher.getName() + " " + teacher.getSurname());
-                System.out.println("New Salary: " + teacher.getSalary());
-                System.out.println();
-            }
-        }
     }
-
-    private static List<Teacher> readTeachers(String filePath) {
-        List<Teacher> teachers = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] parts = line.split(" ");
-                String name = parts[0];
-                String surname = parts[1];
-                int age = Integer.parseInt(parts[2]);
-                boolean gender = parts[3].equals("Male");
-                String subject = parts[4];
-                int yearsOfExperience = Integer.parseInt(parts[5]);
-                int salary = Integer.parseInt(parts[6]);
-                teachers.add(new Teacher(name, surname, age, gender, subject, yearsOfExperience, salary));
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return teachers;
-    }
-
-    private static List<Student> readStudents(String filePath) {
-        List<Student> students = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] parts = line.split(" ");
-                String name = parts[0];
-                String surname = parts[1];
-                int age = Integer.parseInt(parts[2]);
-                boolean gender = parts[3].equals("Male");
-                Student student = new Student(name, surname, age, gender);
-                for (int i = 4; i < parts.length; i++) {
-                    student.addGrade(Integer.parseInt(parts[i]));
-                }
-                students.add(student);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return students;
-    }
-} //  did buffReader with AI and StackOverflow, sorry :,(
+}

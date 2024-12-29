@@ -1,26 +1,33 @@
 package models;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class School {
-    private ArrayList<Person> members;
+    private final ArrayList<Person> members;
 
     public School() {
         members = new ArrayList<>();
     }
 
-    public void addMember(Person member) {
-        members.add(member);
+    public void sort() {
+        Collections.sort(members);
+    }
+
+    public void addMember(Person person) {
+        members.add(person);
     }
 
     @Override
     public String toString() {
-        StringBuilder result = new StringBuilder();
-        for (Person member : members) {
-            result.append(member.toString()).append("\n");
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < members.size(); i++) {
+            sb.append(i + 1).append(". ").append(members.get(i)).append("\n");
         }
-        return result.toString();
+
+        return sb.toString();
     }
 
-    public ArrayList<Person> getMembers() { return members; }
+
 }

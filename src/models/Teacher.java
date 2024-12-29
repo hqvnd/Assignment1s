@@ -12,8 +12,10 @@ public class Teacher extends Person {
         this.salary = salary;
     }
 
-    public void giveRaise(double percentage) {
-        salary += salary * (percentage / 100);
+    public int giveRaise(int a){
+        double persent = (a / 100.0) * salary;
+        salary += persent;
+        return salary;
     }
 
     @Override
