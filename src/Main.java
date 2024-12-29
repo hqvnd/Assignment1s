@@ -58,4 +58,4 @@ public class Main {
 
         System.out.println(school);
     }
-}
+} // bomboooclat rich millionare code :)
